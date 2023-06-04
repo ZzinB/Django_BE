@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+{% block content %}
+  <div class="container">
+  <form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+
+    <input name="image" type="file">
+    <br><br>
+
+  <input class="btn btn-primary" type="submit" value="업로드">
+  </form>
+  </div>
+{% endblock %}
