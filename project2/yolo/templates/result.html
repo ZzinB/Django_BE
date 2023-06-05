@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Image Detection Result</title>
+</head>
+<body>
+    <h1>Image Detection Result</h1>
+
+    <div>
+        <img src="{{ post.image.url }}" alt="Uploaded Image">
+    </div>
+
+    <div>
+        <h2>Detected Objects:</h2>
+        <ul>
+            {% for result in results %}
+                <li>{{ result }}</li>
+            {% empty %}
+                <li>No objects detected.</li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <div>
+        <h2>YOLO Image:</h2>
+        <img src="{{ yolo }}" alt="YOLO Image">
+    </div>
+</body>
+</html>
