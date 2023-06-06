@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container">
+  {% if post.image %}
+    <img src="{{post.image.url}}">
+    <br><br>
+    {% comment %} <a href="{% url 'delete' post.id %}"><button>삭제</button></a> {% endcomment %}
+  {% endif %}
+</div>
+{% endblock %}

@@ -28,6 +28,5 @@ from yolo import views
 urlpatterns = [ # 빈 경로에 대한 처리 함수 지정
     path('admin/', admin.site.urls),
     path('', include('yolo.urls')),
-    # path('media/(?P<path>.*)$', serve, {'document_root': settings.MEDIA_ROOT}),
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
