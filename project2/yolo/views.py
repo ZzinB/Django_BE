@@ -1,13 +1,12 @@
 import os
 from django.conf import settings
 from django.shortcuts import render, redirect, get_object_or_404
-from yolov5.detection import run_yolov5_detection
 from .models import Post
 from PIL import Image
 from PIL.ExifTags import TAGS
 import json
 from django.http import HttpResponse
-
+from yolov5.detect import run
 
 def home(request):
   return render(request,'home.html')
@@ -26,15 +25,14 @@ def upload_image(request):
         if coordinates:
             post.coordinates = coordinates
             post.save()
+            
         weights_path = 'yolov5/weights/best.pt'  # 가중치 파일의 경로
-        results = run_yolov5_detection(post.image.path, weights_path)
-        
-        if results and len(results) > 0:
+        # results = run_yolov5_detection(post.image.path, weights_path)
+        rs_img, rs_label = run(source= post.image.path, weights= weights_path, project=os.path.join(settings.MEDIA_ROOT, 'yolo'))
+        if rs_label:
             # 탐지 결과를 처리하고 필요한 작업을 수행합니다.
-            labels = []
-            for result in results:
-                labels.extend(result['name'])
-            post.labels = labels
+            
+            post.labels = rs_label
             post.save()
             
             return redirect('/detail/'+str(post.id))
