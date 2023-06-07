@@ -2,7 +2,7 @@ import os
 from django.conf import settings
 from django.shortcuts import render, redirect, get_object_or_404
 from yolov5.detection import run_yolov5_detection
-from .models import Post, Label
+from .models import Post
 from PIL import Image
 from PIL.ExifTags import TAGS
 import json
@@ -34,11 +34,8 @@ def upload_image(request):
             labels = []
             for result in results:
                 labels.extend(result['name'])
-
-            # Save labels to the database
-            for label_name in labels:
-                label, _ = Label.objects.get_or_create(name=label_name)
-                post.labels.add(label)
+            post.labels = labels
+            post.save()
             
             return redirect('/detail/'+str(post.id))
 
@@ -46,6 +43,7 @@ def upload_image(request):
     else:
         post = Post()
         return render(request, 'create.html', {'post': post})
+
 
 def delete(request, post_id):
   post_detail = get_object_or_404(Post, pk=post_id)

@@ -1,8 +1,8 @@
 from django import forms
-from .models import ImageModel
+from .models import Post
 
 
 class ImageUploadForm(forms.ModelForm):
     class Meta:
-        model = ImageModel
+        model = Post
         fields = ['image']
