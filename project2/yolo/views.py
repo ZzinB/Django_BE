@@ -49,48 +49,45 @@ def delete(request, post_id):
   return redirect('/create')
 
 def meta(image_path):
-  image = Image.open(image_path)
-  info = image._getexif()
-  image.close()
-  # 새로운 딕셔너리 생성
+    image = Image.open(image_path)
+    info = image._getexif()
+    image.close()
 
-  taglabel = {}
+    if info is not None:
+        taglabel = {}
 
-  for tag, value in info.items():
-      decoded = TAGS.get(tag, tag)
-      taglabel[decoded] = value
+        for tag, value in info.items():
+            decoded = TAGS.get(tag, tag)
+            taglabel[decoded] = value
 
-  exifGPS = taglabel['GPSInfo']
-  if exifGPS:
-    latData = exifGPS[2]
-    lonData = exifGPS[4]
+        exifGPS = taglabel.get('GPSInfo')
+        if exifGPS:
+            latData = exifGPS[2]
+            lonData = exifGPS[4]
 
-    if latData and lonData:
-      latDeg = latData[0]
-      latMin = latData[1]
-      latSec = latData[2]
-      
-      lonDeg = lonData[0]
-      lonMin = lonData[1]
-      lonSec = lonData[2]
+            if latData and lonData:
+                latDeg = latData[0]
+                latMin = latData[1]
+                latSec = latData[2]
 
-      Lat = (latDeg + (latMin + latSec / 60.0) / 60.0)
-      if exifGPS[1] == 'S':
-          Lat = -1 * Lat
+                lonDeg = lonData[0]
+                lonMin = lonData[1]
+                lonSec = lonData[2]
 
-      Lon = (lonDeg + (lonMin + lonSec / 60.0) / 60.0)
-      if exifGPS[3] == 'W':
-          Lon = -1 * Lon
+                Lat = (latDeg + (latMin + latSec / 60.0) / 60.0)
+                if exifGPS[1] == 'S':
+                    Lat = -1 * Lat
 
-      # Create a dictionary with latitude and longitude
-      coordinates = {
-          'latitude': Lat,
-          'longitude': Lon
-      }
+                Lon = (lonDeg + (lonMin + lonSec / 60.0) / 60.0)
+                if exifGPS[3] == 'W':
+                    Lon = -1 * Lon
 
-      # Convert the dictionary to JSON
-      json_data = json.dumps(coordinates)
+                coordinates = {
+                    'latitude': Lat,
+                    'longitude': Lon
+                }
 
-      return json_data
+                json_data = json.dumps(coordinates)
+                return json_data
 
-  return None
+    return None
